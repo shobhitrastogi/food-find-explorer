@@ -1,6 +1,5 @@
 
-import { useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { getProductByBarcode } from "@/api/foodApi";
 import Layout from "@/components/Layout";
@@ -8,7 +7,8 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
-import { Loader } from "lucide-react";
+import { Loader, AlertCircle } from "lucide-react";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
 const NutritionGradeBadge = ({ grade }: { grade: string }) => {
   if (!grade) return null;
@@ -34,6 +34,7 @@ const NutritionGradeBadge = ({ grade }: { grade: string }) => {
 
 const ProductDetail = () => {
   const { barcode } = useParams<{ barcode: string }>();
+  const navigate = useNavigate();
 
   const {
     data,
@@ -45,9 +46,11 @@ const ProductDetail = () => {
     queryKey: ["product", barcode],
     queryFn: () => getProductByBarcode(barcode!),
     enabled: !!barcode,
+    retry: 1,
   });
 
   const product = data?.product;
+  const isProductNotFound = isError && (error as any)?.message?.includes("404");
 
   // Go back to previous page
   const handleGoBack = () => {
@@ -64,10 +67,49 @@ const ProductDetail = () => {
     );
   }
 
+  if (isProductNotFound) {
+    return (
+      <Layout>
+        <div className="container mx-auto py-8">
+          <Button 
+            variant="ghost" 
+            onClick={handleGoBack}
+            className="mb-4"
+          >
+            &larr; Back
+          </Button>
+          
+          <Alert variant="destructive" className="my-8">
+            <AlertCircle className="h-4 w-4" />
+            <AlertTitle>Product Not Found</AlertTitle>
+            <AlertDescription>
+              We couldn't find a product with barcode: {barcode}. Please check if the barcode is correct and try again.
+            </AlertDescription>
+          </Alert>
+          
+          <div className="flex justify-center mt-6">
+            <Button onClick={() => navigate("/")} className="bg-food-green hover:bg-food-green/80 mr-4">
+              Go Home
+            </Button>
+            <Button variant="outline" onClick={() => refetch()}>Try Again</Button>
+          </div>
+        </div>
+      </Layout>
+    );
+  }
+
   if (isError || !product) {
     return (
       <Layout>
         <div className="container mx-auto py-8">
+          <Button 
+            variant="ghost" 
+            onClick={handleGoBack}
+            className="mb-4"
+          >
+            &larr; Back
+          </Button>
+          
           <div className="flex flex-col items-center justify-center p-8 text-center">
             <p className="text-red-500 mb-4">Failed to load product details</p>
             <Button onClick={() => refetch()}>Try Again</Button>

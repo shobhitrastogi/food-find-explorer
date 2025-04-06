@@ -1,41 +1,71 @@
 
-import { Search } from "lucide-react";
-import { Input } from "@/components/ui/input";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Search } from "lucide-react";
+import ThemeToggle from "@/components/ThemeToggle";
+import BarcodeSearch from "@/components/BarcodeSearch";
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from "@/components/ui/tabs";
 
 const Header = () => {
-  const [searchTerm, setSearchTerm] = useState("");
+  const [searchQuery, setSearchQuery] = useState("");
   const navigate = useNavigate();
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
-    if (searchTerm.trim()) {
-      navigate(`/search?query=${encodeURIComponent(searchTerm.trim())}`);
+    if (searchQuery.trim()) {
+      navigate(`/search?query=${encodeURIComponent(searchQuery.trim())}`);
     }
   };
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur">
-      <div className="container flex h-16 items-center">
-        <div className="mr-4 flex items-center">
-          <a href="/" className="flex items-center">
-            <span className="text-2xl font-bold text-food-green">FoodFind</span>
-            <span className="text-xl font-light ml-1">Explorer</span>
-          </a>
+    <header className="sticky top-0 z-50 w-full border-b bg-background/80 backdrop-blur-sm">
+      <div className="container mx-auto py-4">
+        <div className="flex items-center justify-between">
+          <Link to="/" className="flex items-center gap-2 font-bold text-2xl text-food-green">
+            <img src="/placeholder.svg" alt="Logo" className="w-8 h-8" />
+            <span>Food Explorer</span>
+          </Link>
+          
+          <div className="flex items-center gap-2">
+            <ThemeToggle />
+            <Link to="/">
+              <Button variant="ghost">Home</Button>
+            </Link>
+          </div>
         </div>
-
-        <div className="flex flex-1 items-center justify-end md:justify-center">
-          <form onSubmit={handleSearch} className="w-full max-w-md relative">
-            <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-            <Input
-              type="search"
-              placeholder="Search products..."
-              className="w-full pl-8"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-            />
-          </form>
+        
+        <div className="mt-4">
+          <Tabs defaultValue="name">
+            <TabsList className="mb-4">
+              <TabsTrigger value="name">Search by Name</TabsTrigger>
+              <TabsTrigger value="barcode">Search by Barcode</TabsTrigger>
+            </TabsList>
+            <TabsContent value="name">
+              <form onSubmit={handleSearch} className="flex w-full gap-2">
+                <div className="relative flex-1">
+                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground h-4 w-4" />
+                  <Input
+                    type="search"
+                    placeholder="Search for food products..."
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="pl-10"
+                  />
+                </div>
+                <Button type="submit">Search</Button>
+              </form>
+            </TabsContent>
+            <TabsContent value="barcode">
+              <BarcodeSearch />
+            </TabsContent>
+          </Tabs>
         </div>
       </div>
     </header>

@@ -42,7 +42,8 @@ export const fetchProducts = async (page: number = 1, pageSize: number = 24): Pr
     );
     
     if (!response.ok) {
-      throw new Error(`API error: ${response.status}`);
+      const errorData = await response.json().catch(() => ({}));
+      throw new Error(`API error: ${response.status}`, { cause: errorData });
     }
     
     return await response.json();
@@ -62,7 +63,8 @@ export const searchProducts = async (query: string, page: number = 1, pageSize: 
     );
     
     if (!response.ok) {
-      throw new Error(`API error: ${response.status}`);
+      const errorData = await response.json().catch(() => ({}));
+      throw new Error(`API error: ${response.status}`, { cause: errorData });
     }
     
     return await response.json();
@@ -78,13 +80,28 @@ export const getProductByBarcode = async (barcode: string): Promise<{ product: P
     const response = await fetch(`${BASE_URL}/api/v0/product/${barcode}.json`);
     
     if (!response.ok) {
-      throw new Error(`API error: ${response.status}`);
+      const errorMessage = response.status === 404
+        ? `Product with barcode ${barcode} not found`
+        : `API error: ${response.status}`;
+        
+      throw new Error(errorMessage, { cause: { status: response.status } });
     }
     
-    return await response.json();
+    const data = await response.json();
+    
+    if (!data.product || Object.keys(data.product).length === 0) {
+      throw new Error(`Product with barcode ${barcode} not found`, { cause: { status: 404 } });
+    }
+    
+    return data;
   } catch (error) {
     console.error("Error fetching product by barcode:", error);
-    toast.error("Failed to load product details. Please try again later.");
+    
+    // Only show toast for non-404 errors
+    if ((error as any)?.cause?.status !== 404) {
+      toast.error("Failed to load product details. Please try again later.");
+    }
+    
     throw error;
   }
 };
