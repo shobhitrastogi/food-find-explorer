@@ -12,12 +12,13 @@ export interface Product {
   ingredients_text: string;
   nutrition_grades: string;
   nutriments: {
-    energy_100g: number;
-    fat_100g: number;
-    carbohydrates_100g: number;
-    proteins_100g: number;
-    salt_100g: number;
-    sugars_100g: number;
+    energy_100g?: number;
+    fat_100g?: number;
+    carbohydrates_100g?: number;
+    proteins_100g?: number;
+    salt_100g?: number;
+    sugars_100g?: number;
+    [key: string]: any;
   };
   nutrient_levels: Record<string, string>;
   labels: string;

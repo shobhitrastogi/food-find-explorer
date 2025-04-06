@@ -77,7 +77,7 @@ const ProductDetail = () => {
     );
   }
 
-  // Extract nutrition data
+  // Extract nutrition data with proper type checking
   const nutriments = product.nutriments || {};
   
   return (
