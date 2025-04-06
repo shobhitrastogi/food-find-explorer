@@ -19,7 +19,6 @@ const ProductList = () => {
   } = useQuery({
     queryKey: ["products", page],
     queryFn: () => fetchProducts(page, PAGE_SIZE),
-    keepPreviousData: true,
     staleTime: 5 * 60 * 1000, // 5 minutes
   });
 
