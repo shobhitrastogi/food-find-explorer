@@ -5,10 +5,12 @@ import { fetchProducts, Product } from "@/api/foodApi";
 import ProductCard from "./ProductCard";
 import ProductCardSkeleton from "./ProductCardSkeleton";
 import { Button } from "@/components/ui/button";
+import { useNavigate } from "react-router-dom";
 
 const ProductList = () => {
   const [page, setPage] = useState(1);
   const PAGE_SIZE = 24;
+  const navigate = useNavigate();
 
   const {
     data,
@@ -23,8 +25,7 @@ const ProductList = () => {
   });
 
   const handleProductClick = (product: Product) => {
-    console.log("Product clicked:", product);
-    // In the future, this will navigate to the product detail page
+    navigate(`/product/${product.code}`);
   };
 
   const loadMore = () => {
