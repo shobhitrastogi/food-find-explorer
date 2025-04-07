@@ -43,7 +43,10 @@ export const fetchProducts = async (page: number = 1, pageSize: number = 24): Pr
     
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}));
-      throw new Error(`API error: ${response.status}`, { cause: errorData });
+      const error = new Error(`API error: ${response.status}`);
+      // Use a custom property that TypeScript won't complain about
+      (error as any).errorData = errorData;
+      throw error;
     }
     
     return await response.json();
@@ -64,7 +67,10 @@ export const searchProducts = async (query: string, page: number = 1, pageSize: 
     
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}));
-      throw new Error(`API error: ${response.status}`, { cause: errorData });
+      const error = new Error(`API error: ${response.status}`);
+      // Use a custom property that TypeScript won't complain about
+      (error as any).errorData = errorData;
+      throw error;
     }
     
     return await response.json();
@@ -84,13 +90,19 @@ export const getProductByBarcode = async (barcode: string): Promise<{ product: P
         ? `Product with barcode ${barcode} not found`
         : `API error: ${response.status}`;
         
-      throw new Error(errorMessage, { cause: { status: response.status } });
+      const error = new Error(errorMessage);
+      // Use a custom property that TypeScript won't complain about
+      (error as any).statusCode = response.status;
+      throw error;
     }
     
     const data = await response.json();
     
     if (!data.product || Object.keys(data.product).length === 0) {
-      throw new Error(`Product with barcode ${barcode} not found`, { cause: { status: 404 } });
+      const error = new Error(`Product with barcode ${barcode} not found`);
+      // Use a custom property that TypeScript won't complain about
+      (error as any).statusCode = 404;
+      throw error;
     }
     
     return data;
@@ -98,7 +110,7 @@ export const getProductByBarcode = async (barcode: string): Promise<{ product: P
     console.error("Error fetching product by barcode:", error);
     
     // Only show toast for non-404 errors
-    if ((error as any)?.cause?.status !== 404) {
+    if ((error as any)?.statusCode !== 404) {
       toast.error("Failed to load product details. Please try again later.");
     }
     
