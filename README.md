@@ -1,73 +1,84 @@
-# Welcome to your Lovable project
+# 🍽️ Food Find Explorer
 
-## Project info
+A modern React.js web application to help users discover the best places to eat, explore nearby restaurants, and get recommendations based on location and preferences.
 
-**URL**: https://lovable.dev/projects/84fa6863-3c0d-4c74-924d-a960507bf82a
+## 🚀 Features
 
-## How can I edit this code?
+- 🔍 Search for restaurants by name, cuisine, or location
+- 📍 Integration with location services to show nearby places
+- ⭐ User ratings and reviews
+- 🖼️ Beautiful, responsive UI
+- ⚡ Fast performance with optimized React components
+- 📱 Mobile-friendly design
 
-There are several ways of editing your application.
+## 🛠️ Tech Stack
 
-**Use Lovable**
+- **Frontend:** React.js, JSX, Tailwind CSS / CSS Modules / Styled Components (choose your actual)
+- **APIs:** Google Places API / Zomato API / Custom REST API
+- **Routing:** React Router DOM
+- **State Management:** Redux / Context API / useState & useReducer
+- **Other Libraries:** Axios, React Icons, etc.
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/84fa6863-3c0d-4c74-924d-a960507bf82a) and start prompting.
+## 📂 Project Structure
 
-Changes made via Lovable will be committed automatically to this repo.
+food-find-explorer/ 
+├── public/ 
+│ ├── index.html 
+│ └── favicon.ico 
+├── src/ 
+│ ├── assets/ # Images, icons, and static files 
+│ ├── components/ # Reusable components (Navbar, Footer, Cards, etc.) 
+│ ├── pages/ # Pages (Home, Search Results, Restaurant Details) 
+│ ├── services/ # API calls (fetching restaurants, details, etc.) 
+│ ├── context/ # Context providers (if using Context API) 
+│ ├── App.jsx # Main App component 
+│ ├── main.jsx # Entry point (ReactDOM render) 
+│ ├── routes.jsx # Application routes 
+│ └── index.css # Global styles 
+├── .gitignore 
+├── package.json 
+├── README.md └── vite.config.js / webpack.config.js (depends on your setup)
 
-**Use your preferred IDE**
+## ⚙️ Installation
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+1. **Clone the repository**
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+```bash
+git clone https://github.com/your-username/food-find-explorer.git
+cd food-find-explorer
 
-Follow these steps:
+Install dependencies
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+npm install
+# or
+yarn install
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
+Run the development server
 npm run dev
+# or
+yarn dev
 ```
+🧩 Usage
+Open your browser and go to http://localhost:5173/ (or the port your dev server uses).
 
-**Edit a file directly in GitHub**
+Use the search bar to find food places.
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+Click on restaurant cards to view details.
 
-**Use GitHub Codespaces**
+Explore reviews and ratings.
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+🚀 Deployment
+You can deploy the app to platforms like:
 
-## What technologies are used for this project?
+Vercel
 
-This project is built with:
+Netlify
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+GitHub Pages
 
-## How can I deploy this project?
+AWS Amplify
 
-Simply open [Lovable](https://lovable.dev/projects/84fa6863-3c0d-4c74-924d-a960507bf82a) and click on Share -> Publish.
-
-## Can I connect a custom domain to my Lovable project?
-
-Yes it is!
-
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+Build for production:
+npm run build
+# or
+yarn build
