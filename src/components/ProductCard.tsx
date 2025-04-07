@@ -1,7 +1,6 @@
 
 import { Card, CardContent } from "@/components/ui/card";
 import { Product } from "@/api/foodApi";
-import { cn } from "@/lib/utils";
 
 interface ProductCardProps {
   product: Product;
@@ -21,12 +20,37 @@ const NutritionGradeBadge = ({ grade }: { grade: string }) => {
 };
 
 const ProductCard = ({ product, onClick }: ProductCardProps) => {
-  // Fallback image if product image is not available
-  const imageUrl = product.image_url || product.image_small_url || "/placeholder.svg";
+  // Array of fallback images if product image is not available
+  const fallbackImages = [
+    "/placeholder.svg",
+    "https://images.unsplash.com/photo-1582562124811-c09040d0a901?auto=format&fit=crop&w=300&h=300",
+    "https://images.unsplash.com/photo-1472396961693-142e6e269027?auto=format&fit=crop&w=300&h=300",
+    "https://images.unsplash.com/photo-1618160702438-9b02ab6515c9?auto=format&fit=crop&w=300&h=300"
+  ];
+  
+  // Use product image or first fallback
+  const imageUrl = product.image_url || product.image_small_url || fallbackImages[0];
   
   const truncateText = (text: string, maxLength: number) => {
     if (!text) return "No information available";
     return text.length > maxLength ? `${text.substring(0, maxLength)}...` : text;
+  };
+  
+  // Function to try next fallback image
+  const handleImageError = (e: React.SyntheticEvent<HTMLImageElement>) => {
+    const img = e.currentTarget;
+    const currentSrc = img.src;
+    const currentIndex = fallbackImages.findIndex(src => currentSrc.includes(src));
+    
+    // If we can use next fallback image
+    if (currentIndex < fallbackImages.length - 1) {
+      img.src = fallbackImages[currentIndex + 1];
+    } else {
+      // We've tried all fallbacks, use the last one
+      img.src = fallbackImages[fallbackImages.length - 1];
+      // Prevent infinite error handling
+      img.onerror = null;
+    }
   };
 
   return (
@@ -39,9 +63,7 @@ const ProductCard = ({ product, onClick }: ProductCardProps) => {
           src={imageUrl}
           alt={product.product_name || "Product Image"}
           className="w-full h-full object-contain"
-          onError={(e) => {
-            e.currentTarget.src = "/placeholder.svg";
-          }}
+          onError={handleImageError}
         />
         {product.nutrition_grades && (
           <div className="absolute top-2 right-2">
