@@ -44,7 +44,8 @@ export const fetchProducts = async (page: number = 1, pageSize: number = 24): Pr
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}));
       const error = new Error(`API error: ${response.status}`);
-      error.cause = errorData;
+      // Use a custom property that TypeScript won't complain about
+      (error as any).errorData = errorData;
       throw error;
     }
     
@@ -67,7 +68,8 @@ export const searchProducts = async (query: string, page: number = 1, pageSize: 
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}));
       const error = new Error(`API error: ${response.status}`);
-      error.cause = errorData;
+      // Use a custom property that TypeScript won't complain about
+      (error as any).errorData = errorData;
       throw error;
     }
     
@@ -89,7 +91,8 @@ export const getProductByBarcode = async (barcode: string): Promise<{ product: P
         : `API error: ${response.status}`;
         
       const error = new Error(errorMessage);
-      error.cause = { status: response.status };
+      // Use a custom property that TypeScript won't complain about
+      (error as any).statusCode = response.status;
       throw error;
     }
     
@@ -97,7 +100,8 @@ export const getProductByBarcode = async (barcode: string): Promise<{ product: P
     
     if (!data.product || Object.keys(data.product).length === 0) {
       const error = new Error(`Product with barcode ${barcode} not found`);
-      error.cause = { status: 404 };
+      // Use a custom property that TypeScript won't complain about
+      (error as any).statusCode = 404;
       throw error;
     }
     
@@ -106,7 +110,7 @@ export const getProductByBarcode = async (barcode: string): Promise<{ product: P
     console.error("Error fetching product by barcode:", error);
     
     // Only show toast for non-404 errors
-    if ((error as any)?.cause?.status !== 404) {
+    if ((error as any)?.statusCode !== 404) {
       toast.error("Failed to load product details. Please try again later.");
     }
     

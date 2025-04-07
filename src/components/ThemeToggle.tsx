@@ -25,7 +25,7 @@ const ThemeToggle = () => {
         type="single" 
         value={theme}
         onValueChange={(value) => {
-          if (value) setTheme(value);
+          if (value) setTheme(value as "light" | "dark" | "system");
         }}
         className="border rounded-md"
       >
