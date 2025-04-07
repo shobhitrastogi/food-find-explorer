@@ -35,10 +35,4 @@ jobs:
     - name: Build
       run: npm run build
       
-    # Optional: Deploy to GitHub Pages if on main branch
-    - name: Deploy to GitHub Pages
-      if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
-      uses: JamesIves/github-pages-deploy-action@v4
-      with:
-        folder: dist # The folder the action should deploy
-        branch: gh-pages # The branch the action should deploy to
+    
